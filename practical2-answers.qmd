@@ -13,6 +13,7 @@ format:
 editor: source
 ---
 
+```{=html}
 <!--
 Before you start:
 
@@ -26,6 +27,7 @@ Before you start:
 - Render this document with the "Render" button in RStudio, or by running
   quarto::quarto_render("practical2-answers.qmd") in the R console.
 -->
+```
 
 ## Getting started
 
@@ -51,8 +53,9 @@ Download the `.csv` file and use `readr::read_csv()` to read the dataset into R.
 
 ```{r}
 #| label: read-data
+#| eval: false
 
-# nurses <- read_csv("data/reg-nurses-dataworld-1998-2020.csv")
+nurses <- read_csv("data/reg-nurses-dataworld-1998-2020.csv")
 ```
 
 ### Question 2
@@ -62,10 +65,20 @@ Check the format of the data. Is it in a tidy format? Are there cleaning/tidying
 ```{r}
 #| label: inspect-data
 
+glimpse(nurses)
+
+# missingness
+nurses |>
+  summarise(across(everything(), ~mean(is.na(.)))) |> glimpse()
+
+nurses |>
+  filter(is.na(`Location Quotient`)) |> count(Year)
+
+nurses |>
+  filter(is.na(`Total Employed RN`)) |> select(State, Year)
 ```
 
-
-
+**Is it tidy?** The data is mostly tidy. The rows and columns are organised in a logical way.
 
 ## Data Manipulation and Visualisation
 
@@ -77,9 +90,6 @@ Summarise the data available in the dataset. What years/states/variables are pre
 #| label: summarise-data
 
 ```
-
-
-
 
 ### Question 4
 
@@ -99,9 +109,6 @@ Create a new plot to visualise some other information (of your choice) from the 
 
 ```
 
-
-
-
 ## Adding additional data
 
 ### Question 6
@@ -110,8 +117,9 @@ Read in the additional dataset from the National Council of State Boards of Nurs
 
 ```{r}
 #| label: read-additional-data
+#| eval: false
 
-# nurse_licenses <- read_csv("data/nurse-licenses-ncsbn-2026-01-05.csv")
+nurse_licenses <- read_csv("data/nurse-licenses-ncsbn-2026-01-05.csv")
 ```
 
 ### Question 7
@@ -123,15 +131,9 @@ Summarise the data available in this new dataset. What years/states/variables ar
 
 ```
 
-
-
-
 ### Question 8
 
 What data is overlapping between this new dataset and the original one? Think about the temporal overlap and which types of nurses are present in each dataset.
-
-
-
 
 ### Question 9
 
@@ -141,9 +143,6 @@ If it is appropriate, create a combined dataset using both sources of informatio
 #| label: combine-data
 
 ```
-
-
-
 
 ### Question 10
 
@@ -178,9 +177,6 @@ Load the `us_rent_income` data located in the `tidyr` package.
 ### Question 13
 
 How would it be possible to merge the two datasets?
-
-
-
 
 ### Question 14
 
