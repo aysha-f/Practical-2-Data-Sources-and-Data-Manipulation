@@ -158,6 +158,11 @@ Using `dplyr::filter()` and `ggplot()`, recreate the plot from the 'Getting Star
 ```{r}
 #| label: recreate-plot
 
+nurses |> filter(State %in% c("Alabama", "California", "New York", "North Carolina")) |>
+  ggplot() +
+  geom_line(aes(x = Year, y = hourly_wage_median, colour = State)) +
+  scale_y_continuous("Hourly Wage Median") +
+  theme_bw()
 ```
 
 ### Question 5
