@@ -123,7 +123,33 @@ Summarise the data available in the dataset. What years/states/variables are pre
 ```{r}
 #| label: summarise-data
 
+# column names
+names(nurses)
+
+# years of data
+nurses |>
+  summarise(min_year = min(Year),
+            max_year = max(Year),
+            n_years = n_distinct(Year),
+            n_states = n_distinct(State))
+
+# check for each state (does each state have the same years?)
+nurses |> 
+  group_by(State) |>
+    summarise(min_year = min(Year),
+              max_year = max(Year),
+              n_years = n_distinct(Year),
+              n_rows = n())
+
+# state names
+state_names <- nurses |> pull(State) |> unique() |> sort()
+state_names
+
+# is Year x State a unique identified for the rows of the data?
+nurses |> summarise(n_distinct(Year,State)) |> pull() == 54*23
+
 ```
+The data set covers **23 years (1998-2020)** across **54 jurisdictions**. For each state-year it records the total number of employed RNs, several wage statistics, a location quotient, and some broader employment aggregates. 
 
 ### Question 4
 
