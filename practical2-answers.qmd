@@ -53,7 +53,6 @@ Download the `.csv` file and use `readr::read_csv()` to read the dataset into R.
 
 ```{r}
 #| label: read-data
-#| eval: false
 
 nurses <- read_csv("data/reg-nurses-dataworld-1998-2020.csv")
 ```
@@ -78,7 +77,42 @@ nurses |>
   filter(is.na(`Total Employed RN`)) |> select(State, Year)
 ```
 
-**Is it tidy?** The data is mostly tidy. The rows and columns are organised in a logical way.
+**Is it tidy?** The data is mostly tidy. The rows and columns are organised in a logical way. However, there are some things to be improved:
+
+- **Variable names** are messy.
+- **Two columns are a different level of observation** (state/district level) and are the same for each entry within the 54 states/territories each year.
+- **Location Quotient** is missing data before 2010, when a known change in reports occured. This missingness is structural.
+- **Virgin Islands and Guam** have missing Total Employed RN entries in specific years. Pressumably structural.
+
+```{r}
+#| label: columns-rename
+
+nurses <- nurses |>
+  rename(
+    total_employed        = `Total Employed RN`,
+    employed_se_pct       = `Employed Standard Error (%)`,
+    hourly_wage_avg       = `Hourly Wage Avg`,
+    hourly_wage_median    = `Hourly Wage Median`,
+    annual_salary_avg     = `Annual Salary Avg`,
+    annual_salary_median  = `Annual Salary Median`,
+    wage_se_pct           = `Wage/Salary standard error (%)`,
+    hourly_p10            = `Hourly 10th Percentile`,
+    hourly_p25            = `Hourly 25th Percentile`,
+    hourly_p75            = `Hourly 75th Percentile`,
+    hourly_p90            = `Hourly 90th Percentile`,
+    annual_p10            = `Annual 10th Percentile`,
+    annual_p25            = `Annual 25th Percentile`,
+    annual_p75            = `Annual 75th Percentile`,
+    annual_p90            = `Annual 90th Percentile`,
+    location_quotient     = `Location Quotient`,
+    national_total_employed          = `Total Employed (National)_Aggregate`,
+    national_healthcare_employed     = `Total Employed (Healthcare, National)_Aggregate`,
+    state_healthcare_employed        = `Total Employed (Healthcare, State)_Aggregate`,
+    state_total_employed              = `Yearly Total Employed (State)_Aggregate`
+  )
+
+nurses
+```
 
 ## Data Manipulation and Visualisation
 
