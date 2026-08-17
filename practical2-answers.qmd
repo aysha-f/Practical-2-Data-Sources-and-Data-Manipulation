@@ -149,7 +149,8 @@ state_names
 nurses |> summarise(n_distinct(Year,State)) |> pull() == 54*23
 
 ```
-The data set covers **23 years (1998-2020)** across **54 jurisdictions**. For each state-year it records the total number of employed RNs, several wage statistics, a location quotient, and some broader employment aggregates. 
+
+The data set covers **23 years (1998-2020)** across **54 jurisdictions**. For each state-year it records the total number of employed RNs, several wage statistics, a location quotient, and some broader employment aggregates.
 
 ### Question 4
 
@@ -171,6 +172,18 @@ Create a new plot to visualise some other information (of your choice) from the 
 
 ```{r}
 #| label: own-plot
+
+# How does pay vary across states in the most recent year available?
+nurses |>
+  filter(Year == max(Year), !is.na(annual_salary_median)) |>
+  mutate(State = reorder(State, annual_salary_median)) |>
+  ggplot(aes(x = annual_salary_median, y = State)) +
+  geom_point() +
+  scale_x_continuous("Median annual RN salary (US$)", labels = scales::label_dollar()) +
+  ylab(NULL) +
+  ggtitle("Median RN salary by state, 2020") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 6))
 
 ```
 
@@ -194,7 +207,15 @@ Summarise the data available in this new dataset. What years/states/variables ar
 ```{r}
 #| label: summarise-additional-data
 
+nrow(nurse_licenses) # 58 rows instead of 54, why?
+
+nurse_licenses$Jurisdiction
+
+nurse_licenses |> filter(grepl("-", Jurisdiction))
+
 ```
+
+This data set is very different in size and shape to `nurses`. `nurse_licences` has data from a single year (2026), and only contains 2 columns: `Jurisdiction` and `Number` (a count of active nurses). Some states appear twice because of split licensing (`-RN` and `-VN`/`-PN`).
 
 ### Question 8
 
